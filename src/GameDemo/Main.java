@@ -24,6 +24,7 @@ public class Main {
 		frame.setSize(WIDTH, HEIGHT);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.addKeyListener(tower);
 
 	}
 

@@ -21,6 +21,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
     public static boolean needImage = true;
 	public static boolean gotImage = false;
 	public static BufferedImage image;
+	
     public GamePanel() {
 		frameDraw = new Timer(1000/60, this);
 		frameDraw.start();
@@ -81,8 +82,25 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 	}
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+		if (e.getKeyCode()==KeyEvent.VK_ENTER) {
+		    if (currentState == END) {
+		        currentState = MENU;
+		    } else {
+		        currentState++;
+		    }
+		}   
+		if (e.getKeyCode()==KeyEvent.VK_UP) {
+		    System.out.println("Up");
+		}
+		if (e.getKeyCode()==KeyEvent.VK_DOWN) {
+		    System.out.println("Down");
+		}
+		if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
+		    System.out.println("Right");
+		}
+		if (e.getKeyCode()==KeyEvent.VK_LEFT) {
+		    System.out.println("Left");
+		}
 	}
 	@Override
 	public void keyReleased(KeyEvent e) {
@@ -91,8 +109,15 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(currentState == MENU){
+		    updateMenuState();
+		}else if(currentState == GAME){
+		    updateGameState();
+		}else if(currentState == END){
+		    updateEndState();
+		}
+		System.out.println("Action");
+		repaint();
 	}
 	
 }

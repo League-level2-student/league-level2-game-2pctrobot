@@ -21,7 +21,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
     public static boolean needImage = true;
 	public static boolean gotImage = false;
 	public static BufferedImage image;
-	
+	Climber scrap = new Climber(250, 700, 50, 50);
     public GamePanel() {
 		frameDraw = new Timer(1000/60, this);
 		frameDraw.start();
@@ -57,22 +57,22 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 			needImage = false;
 		}
 	}
-	void drawMenuState(Graphics g) {  
+	public void drawMenuState(Graphics g) {  
 		
 	}
-	void drawGameState(Graphics g) {  
+	public void drawGameState(Graphics g) {  
+		scrap.draw(g);
+	}
+	public void drawEndState(Graphics g)  {  
 		
 	}
-	void drawEndState(Graphics g)  {  
+	public void updateMenuState() {  
 		
 	}
-	void updateMenuState() {  
+	public void updateGameState() {  
 		
 	}
-	void updateGameState() {  
-		
-	}
-	void updateEndState()  { 
+	public void updateEndState()  { 
 		
 	}
 	@Override

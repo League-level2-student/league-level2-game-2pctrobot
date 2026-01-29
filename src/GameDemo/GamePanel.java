@@ -17,7 +17,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
     final int GAME = 1;
     final int END = 2;
     Timer frameDraw;
-    int currentState = MENU;
+    int currentState = GAME;
     public static boolean needImage = true;
 	public static boolean gotImage = false;
 	public static BufferedImage image;
@@ -35,14 +35,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 	@Override
 	public void paintComponent(Graphics g){
 		if(currentState == MENU){
-			g.setColor(Color.DARK_GRAY);
-			g.fillRect(0, 0, 1000, 1000);
+			drawMenuState(g);
 		}else if(currentState == GAME){
-			g.setColor(Color.black);
-			g.fillRect(0, 0, 1000, 1000);
+			drawGameState(g);
 		}else if(currentState == END){
-			g.setColor(Color.red);
-			g.fillRect(0, 0, 1000, 1000);
+			drawEndState(g);
 		}
 	}
 	
@@ -58,28 +55,34 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 		}
 	}
 	public void drawMenuState(Graphics g) {  
-		
+		g.setColor(Color.black);
+		g.fillRect(0, 0, 1000, 1000);
 	}
-	public void drawGameState(Graphics g) {  
+	public void drawGameState(Graphics g) { 
+		g.setColor(Color.DARK_GRAY);
+		g.fillRect(0, 0, 1000, 1000);
+		System.out.println("1");
 		scrap.draw(g);
 	}
 	public void drawEndState(Graphics g)  {  
-		
+		g.setColor(Color.red);
+		g.fillRect(0, 0, 1000, 1000);
 	}
 	public void updateMenuState() {  
-		
+	//	drawMenuState();
 	}
 	public void updateGameState() {  
-		
+		//drawMenuState();
 	}
 	public void updateEndState()  { 
-		
+	//	drawMenuState();
 	}
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode()==KeyEvent.VK_ENTER) {
@@ -90,16 +93,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 		    }
 		}   
 		if (e.getKeyCode()==KeyEvent.VK_UP) {
-		    System.out.println("Up");
+		    scrap.up();
 		}
 		if (e.getKeyCode()==KeyEvent.VK_DOWN) {
-		    System.out.println("Down");
+		    scrap.down();
 		}
 		if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
-		    System.out.println("Right");
+		    scrap.right();
 		}
 		if (e.getKeyCode()==KeyEvent.VK_LEFT) {
-		    System.out.println("Left");
+		    scrap.left();
 		}
 	}
 	@Override

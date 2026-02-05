@@ -92,22 +92,26 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 		        currentState++;
 		    }
 		}   
-		if (e.getKeyCode()==KeyEvent.VK_UP) {
-		    scrap.up();
+		if(e.getKeyCode() == KeyEvent.VK_LEFT){
+			scrap.left = true;
 		}
-		if (e.getKeyCode()==KeyEvent.VK_DOWN) {
-		    scrap.down();
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+			scrap.right = true;
 		}
-		if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
-		    scrap.right();
-		}
-		if (e.getKeyCode()==KeyEvent.VK_LEFT) {
-		    scrap.left();
+		
+		if(e.getKeyCode() == KeyEvent.VK_SPACE){
+			scrap.jump();
 		}
 	}
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
+		if(e.getKeyCode() == KeyEvent.VK_LEFT){
+			scrap.left = false;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+			scrap.right = false;
+		}
 		
 	}
 	@Override

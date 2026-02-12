@@ -18,12 +18,13 @@ import javax.swing.Timer;
 public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	public static final int WIDTH = 1000;
 	public static final int HEIGHT = 1000;
+	boolean stopper;
 	
 	JFrame window;
 	Timer timer;
 	
 	Player p1 = new Player(50, 50, 50, 50);
-	
+	ArrayList<Player> sickos = new ArrayList<Player>();
 	ArrayList<Platform> platforms = new ArrayList<Platform>();
 	
 	public static void main(String[] args) {
@@ -51,6 +52,8 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		platforms.add(new Platform(randomPos+randomVar2, 775, 200, 50));
 		platforms.add(new Platform(randomPos+randomVar3, 875, 200, 50));
 		
+		sickos.add(new Player(randomPos, 575, 50, 50));
+		
 		timer.start();
 		
 	}
@@ -61,6 +64,10 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		
 		p1.draw(g);
 		
+		for(Player p : sickos){
+			p.draw(g);
+		}
+		
 		for(Platform p : platforms){
 			p.draw(g);
 		}
@@ -68,8 +75,13 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	
 	public void actionPerformed(ActionEvent e){
 		checkCollision();
+
 		
 		p1.update();
+		
+		for(Player p : sickos){
+			p.update();
+		}
 		
 		for(Platform p : platforms){
 			p.update();
@@ -79,25 +91,48 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		
 	}
 	
-	private boolean checkCollision(){
+	private void checkCollision(){
+		stopper = false;
 		for(Platform p: platforms){
-			if(p1.getCBox().intersects(p.getCBox())){
-				handleCollision(p);
-				return true;
+			if(p1.getCBox().intersects(p.getCBox()) && !stopper){
+				handleCollision(p, p1);
+				System.out.println("collided p1");
+				stopper = true;
+			}
+		}
+		if(!stopper) {
+			p1.setYLimit(950);
+		}
+		for(Platform p: platforms){
+			stopper = false;
+			for(Player s: sickos) {
+				if(s.getCBox().intersects(p.getCBox()) && !stopper){
+					handleCollision(p, s);
+					System.out.println("collided");
+					stopper = true;
+				}
 			}
 		}
 		
-		p1.setYLimit(950);
-		return false;
+		
+		
+		
 	}
 	
-	private void handleCollision(Platform p){
-		if(p1.getYVelocity() >= 0 && p1.getY() + p1.getHeight() < p.getY() + 25){
-			p1.setYLimit(p.getY() - p1.getHeight());
+
+	
+	private void handleCollision(Platform p, Player u){
+		if(u.getYVelocity() >= 0 && u.getY() + u.getHeight() < p.getY() + 25){
+			u.setYLimit(p.getY() - u.getHeight());
+			System.out.println("p1 set to " + (p.getY() - u.getHeight()));
 		}else{
-			p1.setYLimit(950);
+			u.setYLimit(950);
 		}
+		
+		
+		
 	}
+	
 	
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -114,7 +149,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 			p1.right = true;
 		}
 
-		if(e.getKeyCode() == KeyEvent.VK_SPACE){
+		if(e.getKeyCode() == KeyEvent.VK_UP){
 			p1.jump();
 		}
 		
@@ -175,6 +210,7 @@ class Platform{
 	}
 }
 
+
 class Player{
 	private int x;
 	private int y;
@@ -190,7 +226,7 @@ class Player{
 	
 	private int gravity = 1;
 	private int yVelocity = 0;
-	private int jumpPower = 20;
+	private int jumpPower = 16;
 	
 	private int yLimit = 950;
 
@@ -265,3 +301,4 @@ class Player{
 		return yVelocity;
 	}
 }
+

@@ -23,7 +23,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	JFrame window;
 	Timer timer;
 	
-	Player p1 = new Player(50, 50, 50, 50);
+	Player p1 = new Player(50, 50, 50, 50, false, Color.ORANGE);
 	ArrayList<Player> sickos = new ArrayList<Player>();
 	ArrayList<Platform> platforms = new ArrayList<Platform>();
 	
@@ -52,7 +52,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		platforms.add(new Platform(randomPos+randomVar2, 775, 200, 50));
 		platforms.add(new Platform(randomPos+randomVar3, 875, 200, 50));
 		
-		sickos.add(new Player(randomPos, 575, 50, 50));
+		sickos.add(new Player(randomPos, 575, 50, 50, false, Color.RED));
 		
 		timer.start();
 		
@@ -76,11 +76,19 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	public void actionPerformed(ActionEvent e){
 		checkCollision();
 
-		
 		p1.update();
 		
 		for(Player p : sickos){
 			p.update();
+			if(p1.getX()<p.getX()) {
+				p.left();
+			}
+			if(p1.getX()>p.getX()) {
+				p.right();
+			}
+			if(p1.getY()<p.getY()) {
+				p.jump();
+			}
 		}
 		
 		for(Platform p : platforms){
@@ -103,13 +111,16 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		if(!stopper) {
 			p1.setYLimit(950);
 		}
-		for(Platform p: platforms){
+		for(Player s: sickos){
 			stopper = false;
-			for(Player s: sickos) {
+			for(Platform p: platforms) {
 				if(s.getCBox().intersects(p.getCBox()) && !stopper){
 					handleCollision(p, s);
 					System.out.println("collided");
 					stopper = true;
+				}
+				if(!stopper) {
+					s.setYLimit(950);
 				}
 			}
 		}
@@ -171,134 +182,8 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	}
 }
 
-class Platform{
-	private int x;
-	private int y;
-	private int width;
-	private int height;
-	
-	private Rectangle cBox = new Rectangle();
-	
-	public Platform(int x, int y, int w, int h){
-		this.x = x;
-		this.y = y;
-		this.width = w;
-		this.height = h;
-		
-		cBox.setBounds(x, y, width, height);
-	}
-	
-	public void update(){
-		cBox.setBounds(x, y, width, height);
-	}
-	
-	public void draw(Graphics g){
-		g.setColor(Color.darkGray);
-		g.fillRect(x, y, width, height);
-	}
-	
-	public Rectangle getCBox(){
-		return cBox;
-	}
-	
-	public int getX(){
-		return x;
-	}
-	
-	public int getY(){
-		return y;
-	}
-}
 
 
-class Player{
-	private int x;
-	private int y;
-	private int width;
-	private int height;
-	
-	private Rectangle cBox = new Rectangle();
-	
-	public boolean left = false;
-	public boolean right = false;
-	
-	private int xVelocity = 5;
-	
-	private int gravity = 1;
-	private int yVelocity = 0;
-	private int jumpPower = 16;
-	
-	private int yLimit = 950;
 
-	boolean canJump = false;
-	
-	public Player(int x, int y, int w, int h){
-		this.x = x;
-		this.y = y;
-		this.width = w;
-		this.height = h;
-		
-		cBox.setBounds(x, y, width, height);
-	}
-	
-	public void jump(){
-		if(canJump){
-			yVelocity -= jumpPower;
-			canJump = false;
-		}
-	}
-	
-	public void update(){
-		if(left){
-			x -= xVelocity;
-		}
-		if(right){
-			x += xVelocity;
-		}
-		
-		yVelocity += gravity;
-		y += yVelocity;
-		
-		if(y >= yLimit + 1){
-			y = yLimit + 1;
-			yVelocity = 0;
-			canJump = true;
-		}
-		
-		cBox.setBounds(x, y, width, height);
-	}
-	
-	public void draw(Graphics g){
-		g.setColor(Color.ORANGE);
-		g.fillRect(x, y, width, height);
-	}
-	
-	public Rectangle getCBox(){
-		return cBox;
-	}
-	
-	public void setYLimit(int l){
-		yLimit = l;
-	}
-	
-	public int getX(){
-		return x;
-	}
-	
-	public int getY(){
-		return y;
-	}
-	
-	public int getWidth(){
-		return width;
-	}
-	
-	public int getHeight(){
-		return height;
-	}
-	
-	public int getYVelocity(){
-		return yVelocity;
-	}
-}
+
 

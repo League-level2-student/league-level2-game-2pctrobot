@@ -23,7 +23,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	JFrame window;
 	Timer timer;
 	
-	Player p1 = new Player(50, 50, 50, 50, false, Color.ORANGE);
+	Player p1 = new Player(50, 50, 30, 30, false, Color.ORANGE);
 	ArrayList<Player> sickos = new ArrayList<Player>();
 	ArrayList<Platform> platforms = new ArrayList<Platform>();
 	
@@ -47,12 +47,28 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
         int randomVar3 = rand.nextInt(300);
         
 		
-		platforms.add(new Platform(randomPos, 575, 200, 50));
-		platforms.add(new Platform(randomPos+randomVar1, 675, 200, 50));
-		platforms.add(new Platform(randomPos+randomVar2, 775, 200, 50));
-		platforms.add(new Platform(randomPos+randomVar3, 875, 200, 50));
+		platforms.add(new Platform(randomPos, 595, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar1, 695, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar2, 795, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar3, 895, 200, 30));
+		platforms.add(new Platform(randomPos+275, 595, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar1+275, 695, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar2+275, 795, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar3+275, 895, 200, 30));
+		platforms.add(new Platform(randomPos+550, 595, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar1+550, 695, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar2+550, 795, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar3+550, 895, 200, 30));
+		platforms.add(new Platform(randomPos-275, 595, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar1-275, 695, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar2-275, 795, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar3-275, 895, 200, 30));
+		platforms.add(new Platform(randomPos-550, 595, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar1-550, 695, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar2-550, 795, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar3-550, 895, 200, 30));
 		
-		sickos.add(new Player(randomPos, 575, 50, 50, false, Color.RED));
+		sickos.add(new Player(randomPos, 575, 30, 30, false, Color.RED));
 		
 		timer.start();
 		
@@ -75,7 +91,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	
 	public void actionPerformed(ActionEvent e){
 		checkCollision();
-
+		checkEnemy();
 		p1.update();
 		
 		for(Player p : sickos){
@@ -87,7 +103,10 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 				p.right();
 			}
 			if(p1.getY()<p.getY()) {
-				p.jump();
+				p.ejump();
+			}
+			if(p1.getY()>p.getY()) {
+				p.drop();
 			}
 		}
 		
@@ -109,7 +128,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 			}
 		}
 		if(!stopper) {
-			p1.setYLimit(950);
+			p1.setYLimit(970);
 		}
 		for(Player s: sickos){
 			stopper = false;
@@ -120,7 +139,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 					stopper = true;
 				}
 				if(!stopper) {
-					s.setYLimit(950);
+					s.setYLimit(970);
 				}
 			}
 		}
@@ -128,6 +147,14 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		
 		
 		
+	}
+	
+	private void checkEnemy(){
+		for(Player s: sickos){
+			if(s.getCBox().intersects(p1.getCBox())) {
+				//System.exit(0);
+			}
+		}
 	}
 	
 
@@ -139,11 +166,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		}else{
 			u.setYLimit(950);
 		}
-		
-		
-		
 	}
-	
 	
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -164,9 +187,26 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 			p1.jump();
 		}
 		
+		if(e.getKeyCode() == KeyEvent.VK_DOWN){
+			p1.drop();
+		}
+		
 		if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
 			timer.stop();
 			System.exit(0);
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_A){
+			
+		}
+		if(e.getKeyCode() == KeyEvent.VK_D){
+			
+		}
+		if(e.getKeyCode() == KeyEvent.VK_W){
+			
+		}
+		if(e.getKeyCode() == KeyEvent.VK_S){
+			platforms.add(new Platform(p1.getX(), p1.getY()+30, 30, 30));
 		}
 	}
 

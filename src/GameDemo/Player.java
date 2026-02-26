@@ -40,7 +40,14 @@ public class Player{
 	
 	public void jump(){
 		if(canJump){
-			yVelocity -= jumpPower;
+			yVelocity -= jumpPower*1.1;
+			canJump = false;
+		}
+	}
+	
+	public void ejump(){
+		if(canJump){
+			yVelocity -= jumpPower*0.89;
 			canJump = false;
 		}
 	}
@@ -51,6 +58,13 @@ public class Player{
 	
 	public void right(){
 		x += xVelocity*0.8;
+	}
+	
+	public void drop(){
+		if(canJump){
+			y = y+30;
+			canJump = false;
+		}
 	}
 	
 	public void velocityLeft() {
@@ -64,12 +78,11 @@ public class Player{
 	public void update(){
 		if(enemy!=true) {
 			if(left){
-				x -= xVelocity;
+				x -= xVelocity*1.1;
 			}
 			if(right){
-				x += xVelocity;
+				x += xVelocity*0;
 			}
-		
 			yVelocity += gravity;
 			y += yVelocity;
 		
@@ -82,12 +95,11 @@ public class Player{
 		
 		if(enemy=true) {
 			if(left){
-				x -= xVelocity;
+				x -= xVelocity*1.2;
 			}
 			if(right){
-				x += xVelocity;
+				x += xVelocity*1.2;
 			}
-		
 			yVelocity += gravity;
 			y += yVelocity;
 		

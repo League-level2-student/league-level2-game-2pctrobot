@@ -25,6 +25,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	
 	Player p1 = new Player(50, 50, 30, 30, false, Color.ORANGE);
 	ArrayList<Player> sickos = new ArrayList<Player>();
+	ArrayList<Player> maniacs = new ArrayList<Player>();
 	ArrayList<Platform> platforms = new ArrayList<Platform>();
 	
 	public static void main(String[] args) {
@@ -68,7 +69,9 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		platforms.add(new Platform(randomPos+randomVar2-550, 795, 200, 30));
 		platforms.add(new Platform(randomPos+randomVar3-550, 895, 200, 30));
 		
-		sickos.add(new Player(randomPos, 575, 30, 30, false, Color.RED));
+		sickos.add(new Player(700, 575, 30, 30, false, Color.RED));
+		
+		maniacs.add(new Player(600, 565, 30, 30, false, Color.MAGENTA));
 		
 		timer.start();
 		
@@ -81,6 +84,10 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		p1.draw(g);
 		
 		for(Player p : sickos){
+			p.draw(g);
+		}
+		
+		for(Player p : maniacs){
 			p.draw(g);
 		}
 		
@@ -153,6 +160,15 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		for(Player s: sickos){
 			if(s.getCBox().intersects(p1.getCBox())) {
 				//System.exit(0);
+				System.out.println("killed");
+			}
+		}
+		for(Player s: sickos){
+			for(Player i: sickos) {
+				if(s.getCBox().intersects(i.getCBox()) && !stopper){
+					s.drop();
+				
+				}
 			}
 		}
 	}

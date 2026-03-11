@@ -76,6 +76,7 @@ public class Player{
 	}
 	
 	public void update(){
+		
 		if(enemy!=true) {
 			if(left){
 				x -= xVelocity*1.1;

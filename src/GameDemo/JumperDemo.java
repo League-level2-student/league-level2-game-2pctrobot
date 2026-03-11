@@ -1,6 +1,7 @@
 package GameDemo;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -18,6 +19,8 @@ import javax.swing.Timer;
 public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	public static final int WIDTH = 1000;
 	public static final int HEIGHT = 1000;
+	Random rand = new Random();
+	
 	boolean stopper;
 	
 	JFrame window;
@@ -27,6 +30,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	ArrayList<Player> sickos = new ArrayList<Player>();
 	ArrayList<Player> maniacs = new ArrayList<Player>();
 	ArrayList<Platform> platforms = new ArrayList<Platform>();
+	public int charges = 0;
 	
 	public static void main(String[] args) {
 		new JumperDemo().run();
@@ -41,12 +45,11 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		window.setVisible(true);
 		window.pack();
 		timer = new Timer(1000 / 60, this);
-		Random rand = new Random();
+		
         int randomPos = rand.nextInt(300);
         int randomVar1 = rand.nextInt(300);
         int randomVar2 = rand.nextInt(300);
         int randomVar3 = rand.nextInt(300);
-        
 		
 		platforms.add(new Platform(randomPos, 595, 200, 30));
 		platforms.add(new Platform(randomPos+randomVar1, 695, 200, 30));
@@ -69,9 +72,9 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		platforms.add(new Platform(randomPos+randomVar2-550, 795, 200, 30));
 		platforms.add(new Platform(randomPos+randomVar3-550, 895, 200, 30));
 		
-		sickos.add(new Player(700, 575, 30, 30, false, Color.RED));
+		sickos.add(new Player(randomPos, 575, 30, 30, false, Color.RED));
 		
-		maniacs.add(new Player(600, 565, 30, 30, false, Color.MAGENTA));
+		
 		
 		timer.start();
 		
@@ -80,6 +83,11 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	public void paintComponent(Graphics g){
 		g.setColor(Color.GRAY);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
+		Font scoreFont = new Font("Arial", Font.PLAIN, 20);
+		g.setFont(scoreFont);
+		g.setColor(Color.WHITE);
+		
+		g.drawString("Charges: "+charges, 180, 30);
 		
 		p1.draw(g);
 		
@@ -100,6 +108,13 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		checkCollision();
 		checkEnemy();
 		p1.update();
+		long charging = System.currentTimeMillis();
+		if(charging % 50 == 0) {
+			charges ++;
+			int spawnX = rand.nextInt(1000);
+			int spawnY = rand.nextInt(1000);
+			sickos.add(new Player(spawnX, spawnY, 30, 30, false, Color.RED));
+		}
 		
 		for(Player p : sickos){
 			p.update();
@@ -163,14 +178,20 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 				System.out.println("killed");
 			}
 		}
+		Player toberemoved=null;
+		Player toberemoved2=null;
 		for(Player s: sickos){
-			for(Player i: sickos) {
-				if(s.getCBox().intersects(i.getCBox()) && !stopper){
-					s.drop();
+			for(Player m: maniacs) {
+				if(s.getCBox().intersects(m.getCBox())){
+					toberemoved=s;
+					toberemoved2=m;
 				
 				}
 			}
 		}
+	sickos.remove(toberemoved);
+	maniacs.remove(toberemoved2);
+		
 	}
 	
 
@@ -212,17 +233,21 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 			System.exit(0);
 		}
 		
-		if(e.getKeyCode() == KeyEvent.VK_A){
-			
+		if(e.getKeyCode() == KeyEvent.VK_A && charges>0){
+			maniacs.add(new Player(p1.getX()-30, p1.getY(), 30, 30, false, Color.MAGENTA));
+			charges--;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_D){
-			
+		if(e.getKeyCode() == KeyEvent.VK_D && charges>0){
+			maniacs.add(new Player(p1.getX()+30, p1.getY(), 30, 30, false, Color.MAGENTA));
+			charges--;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_W){
-			
+		if(e.getKeyCode() == KeyEvent.VK_W && charges>0){
+			maniacs.add(new Player(p1.getX(), p1.getY()-30, 30, 30, false, Color.MAGENTA));
+			charges--;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_S){
-			platforms.add(new Platform(p1.getX(), p1.getY()+30, 30, 30));
+		if(e.getKeyCode() == KeyEvent.VK_S && charges>0){
+			maniacs.add(new Player(p1.getX(), p1.getY()+30, 30, 30, false, Color.MAGENTA));
+			charges--;
 		}
 	}
 

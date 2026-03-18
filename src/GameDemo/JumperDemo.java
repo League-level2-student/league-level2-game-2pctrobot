@@ -30,6 +30,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	ArrayList<Player> sickos = new ArrayList<Player>();
 	ArrayList<Player> maniacs = new ArrayList<Player>();
 	ArrayList<Platform> platforms = new ArrayList<Platform>();
+	ArrayList<Bullet> shot = new ArrayList<Bullet>();
 	public int charges = 0;
 	
 	public static void main(String[] args) {
@@ -99,20 +100,30 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 			p.draw(g);
 		}
 		
+		for(Bullet b : shot){
+			b.draw(g);
+		}
+		
 		for(Platform p : platforms){
 			p.draw(g);
 		}
 	}
 	
 	public void actionPerformed(ActionEvent e){
+		for(Bullet b : shot){
+			b.update();
+		}
+		
 		checkCollision();
 		checkEnemy();
 		p1.update();
 		long charging = System.currentTimeMillis();
-		if(charging % 50 == 0) {
+		if(charging % 30 == 0) {
 			charges ++;
+		}
+		if(charging % 50 == 0) {
 			int spawnX = rand.nextInt(1000);
-			int spawnY = rand.nextInt(1000);
+			int spawnY = rand.nextInt(20);
 			sickos.add(new Player(spawnX, spawnY, 30, 30, false, Color.RED));
 		}
 		
@@ -234,18 +245,22 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_A && charges>0){
-			maniacs.add(new Player(p1.getX()-30, p1.getY(), 30, 30, false, Color.MAGENTA));
+			shot.add(new Bullet(p1.getX()-15, p1.getY()+15, 5, 5, 3, 1, Color.MAGENTA));
 			charges--;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_D && charges>0){
-			maniacs.add(new Player(p1.getX()+30, p1.getY(), 30, 30, false, Color.MAGENTA));
+			shot.add(new Bullet(p1.getX()+42, p1.getY()+15, 5, 5, 3, 2, Color.MAGENTA));
 			charges--;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_W && charges>0){
-			maniacs.add(new Player(p1.getX(), p1.getY()-30, 30, 30, false, Color.MAGENTA));
+			shot.add(new Bullet(p1.getX()+15, p1.getY()-15, 5, 5, 1, 3, Color.MAGENTA));
 			charges--;
 		}
 		if(e.getKeyCode() == KeyEvent.VK_S && charges>0){
+			shot.add(new Bullet(p1.getX()+15, p1.getY()+45, 5, 5, 2, 3, Color.MAGENTA));
+			charges--;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_Q && charges>5){
 			maniacs.add(new Player(p1.getX(), p1.getY()+30, 30, 30, false, Color.MAGENTA));
 			charges--;
 		}

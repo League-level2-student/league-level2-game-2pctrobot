@@ -31,13 +31,13 @@ public class Bullet {
 	
 	public void update() {
 		if(up == 1 && left == 3) {
-			
+			y-=10;
 		}else if(up == 2 && left == 3) {
-			
+			y+=10;
 		}else if(up == 3 && left == 1) {
-			
+			x+=10;
 		}else if(up == 3 && left == 2) {
-			
+			x-=10;
 		}
 	}
 	

@@ -9,7 +9,7 @@ public class Player{
 	private int y;
 	private int width;
 	private int height;
-	private boolean enemy;
+	public boolean enemy;
 	private Color colour;
 	
 	private Rectangle cBox = new Rectangle();
@@ -96,10 +96,10 @@ public class Player{
 		
 		if(enemy=true) {
 			if(left){
-				x -= xVelocity*1.2;
+				x -= xVelocity*1.5;
 			}
 			if(right){
-				x += xVelocity*1.2;
+				x += xVelocity*1.5;
 			}
 			yVelocity += gravity;
 			y += yVelocity;

@@ -32,6 +32,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	ArrayList<Platform> platforms = new ArrayList<Platform>();
 	ArrayList<Bullet> shot = new ArrayList<Bullet>();
 	public int charges = 0;
+	public long lastSpawn;
 	
 	public static void main(String[] args) {
 		new JumperDemo().run();
@@ -53,30 +54,30 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
         int randomVar3 = rand.nextInt(300);
 		
 		platforms.add(new Platform(randomPos, 595, 200, 30));
-		platforms.add(new Platform(randomPos+randomVar1, 695, 200, 30));
-		platforms.add(new Platform(randomPos+randomVar2, 795, 200, 30));
-		platforms.add(new Platform(randomPos+randomVar3, 895, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar1, 295, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar2, 395, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar3, 495, 200, 30));
 		platforms.add(new Platform(randomPos+275, 595, 200, 30));
-		platforms.add(new Platform(randomPos+randomVar1+275, 695, 200, 30));
-		platforms.add(new Platform(randomPos+randomVar2+275, 795, 200, 30));
-		platforms.add(new Platform(randomPos+randomVar3+275, 895, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar1+275, 295, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar2+275, 395, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar3+275, 495, 200, 30));
 		platforms.add(new Platform(randomPos+550, 595, 200, 30));
-		platforms.add(new Platform(randomPos+randomVar1+550, 695, 200, 30));
-		platforms.add(new Platform(randomPos+randomVar2+550, 795, 200, 30));
-		platforms.add(new Platform(randomPos+randomVar3+550, 895, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar1+550, 295, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar2+550, 395, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar3+550, 495, 200, 30));
 		platforms.add(new Platform(randomPos-275, 595, 200, 30));
-		platforms.add(new Platform(randomPos+randomVar1-275, 695, 200, 30));
-		platforms.add(new Platform(randomPos+randomVar2-275, 795, 200, 30));
-		platforms.add(new Platform(randomPos+randomVar3-275, 895, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar1-275, 295, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar2-275, 395, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar3-275, 495, 200, 30));
 		platforms.add(new Platform(randomPos-550, 595, 200, 30));
-		platforms.add(new Platform(randomPos+randomVar1-550, 695, 200, 30));
-		platforms.add(new Platform(randomPos+randomVar2-550, 795, 200, 30));
-		platforms.add(new Platform(randomPos+randomVar3-550, 895, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar1-550, 295, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar2-550, 395, 200, 30));
+		platforms.add(new Platform(randomPos+randomVar3-550, 495, 200, 30));
 		
-		sickos.add(new Player(randomPos, 575, 30, 30, false, Color.RED));
+		sickos.add(new Player(randomPos, 700, 30, 30, false, Color.RED));
 		
 		
-		
+		lastSpawn = System.currentTimeMillis();
 		timer.start();
 		
 	}
@@ -110,21 +111,17 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	}
 	
 	public void actionPerformed(ActionEvent e){
-		for(Bullet b : shot){
-			b.update();
-		}
-		
 		checkCollision();
 		checkEnemy();
 		p1.update();
 		long charging = System.currentTimeMillis();
-		if(charging % 30 == 0) {
+		if((charging-lastSpawn)>25000) {
 			charges ++;
 		}
-		if(charging % 50 == 0) {
+		if((charging-lastSpawn)>35000) {
 			int spawnX = rand.nextInt(1000);
 			int spawnY = rand.nextInt(20);
-			sickos.add(new Player(spawnX, spawnY, 30, 30, false, Color.RED));
+			sickos.add(new Player(spawnX, 800, 30, 30, false, Color.RED));
 		}
 		
 		for(Player p : sickos){
@@ -145,6 +142,10 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		
 		for(Platform p : platforms){
 			p.update();
+		}
+		
+		for(Bullet b : shot){
+			b.update();
 		}
 		
 		repaint();
@@ -173,6 +174,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 				}
 				if(!stopper) {
 					s.setYLimit(970);
+					//Make sure it can only damage a player once it hits the floor for the first time.
 				}
 			}
 		}
@@ -190,18 +192,18 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 			}
 		}
 		Player toberemoved=null;
-		Player toberemoved2=null;
+		Bullet toberemoved2=null;
 		for(Player s: sickos){
-			for(Player m: maniacs) {
-				if(s.getCBox().intersects(m.getCBox())){
+			for(Bullet b: shot) {
+				if(s.getCBox().intersects(b.getCBox())){
 					toberemoved=s;
-					toberemoved2=m;
+					toberemoved2=b;
 				
 				}
 			}
 		}
 	sickos.remove(toberemoved);
-	maniacs.remove(toberemoved2);
+	shot.remove(toberemoved2);
 		
 	}
 	
@@ -244,23 +246,23 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 			System.exit(0);
 		}
 		
-		if(e.getKeyCode() == KeyEvent.VK_A && charges>0){
+		if(e.getKeyCode() == KeyEvent.VK_A){
 			shot.add(new Bullet(p1.getX()-15, p1.getY()+15, 5, 5, 3, 1, Color.MAGENTA));
 			charges--;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_D && charges>0){
+		if(e.getKeyCode() == KeyEvent.VK_D){
 			shot.add(new Bullet(p1.getX()+42, p1.getY()+15, 5, 5, 3, 2, Color.MAGENTA));
 			charges--;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_W && charges>0){
+		if(e.getKeyCode() == KeyEvent.VK_W){
 			shot.add(new Bullet(p1.getX()+15, p1.getY()-15, 5, 5, 1, 3, Color.MAGENTA));
 			charges--;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_S && charges>0){
+		if(e.getKeyCode() == KeyEvent.VK_S){
 			shot.add(new Bullet(p1.getX()+15, p1.getY()+45, 5, 5, 2, 3, Color.MAGENTA));
 			charges--;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_Q && charges>5){
+		if(e.getKeyCode() == KeyEvent.VK_Q){
 			maniacs.add(new Player(p1.getX(), p1.getY()+30, 30, 30, false, Color.MAGENTA));
 			charges--;
 		}

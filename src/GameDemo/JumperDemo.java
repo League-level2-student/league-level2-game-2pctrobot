@@ -74,8 +74,8 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		platforms.add(new Platform(randomPos+randomVar2-550, 395, 200, 30));
 		platforms.add(new Platform(randomPos+randomVar3-550, 495, 200, 30));
 		
-		sickos.add(new Player(randomPos, 700, 30, 30, false, Color.RED));
-		
+		sickos.add(new Player(randomPos, 400, 30, 30, false, Color.RED));
+		maniacs.add(new Player(randomPos, 300, 30, 30, false, Color.BLUE));
 		
 		lastSpawn = System.currentTimeMillis();
 		timer.start();
@@ -121,7 +121,12 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		if((charging-lastSpawn)>35000) {
 			int spawnX = rand.nextInt(1000);
 			int spawnY = rand.nextInt(20);
-			sickos.add(new Player(spawnX, 800, 30, 30, false, Color.RED));
+			if(spawnY%2==0) {
+				sickos.add(new Player(spawnX, 800, 30, 30, false, Color.RED));
+			}else {
+				maniacs.add(new Player(spawnX, 800, 30, 30, false, Color.BLUE));
+			}
+			
 		}
 		
 		for(Player p : sickos){
@@ -142,6 +147,22 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		
 		for(Platform p : platforms){
 			p.update();
+		}
+		
+		for(Player p : maniacs){
+			p.update();
+			if(p1.getX()<p.getX()) {
+				p.left();
+			}
+			if(p1.getX()>p.getX()) {
+				p.right();
+			}
+			if(p1.getY()<p.getY()) {
+				p.ejump();
+			}
+			if(p1.getY()>p.getY()) {
+				p.drop();
+			}
 		}
 		
 		for(Bullet b : shot){
@@ -166,14 +187,28 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		}
 		for(Player s: sickos){
 			stopper = false;
-			for(Platform p: platforms) {
-				if(s.getCBox().intersects(p.getCBox()) && !stopper){
-					handleCollision(p, s);
+			for(Player m: maniacs) {
+				if(s.getCBox().intersects(m.getCBox()) && !stopper){
+					handleCollision(m, s);
 					System.out.println("collided");
 					stopper = true;
 				}
 				if(!stopper) {
 					s.setYLimit(970);
+					//Make sure it can only damage a player once it hits the floor for the first time.
+				}
+			}
+		}
+		for(Player m: maniacs){
+			stopper = false;
+			for(Player s: sickos) {
+				if(m.getCBox().intersects(s.getCBox()) && !stopper){
+					handleCollision(s, m);
+					System.out.println("collided");
+					stopper = true;
+				}
+				if(!stopper) {
+					m.setYLimit(970);
 					//Make sure it can only damage a player once it hits the floor for the first time.
 				}
 			}
@@ -184,6 +219,16 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		
 	}
 	
+	private void handleCollision(Player p, Player u) {
+		if(u.getYVelocity() >= 0 && u.getY() + u.getHeight() < p.getY() + 25){
+			u.setYLimit(p.getY() - u.getHeight());
+			System.out.println("p1 set to " + (p.getY() - u.getHeight()));
+		}else{
+			u.setYLimit(950);
+		}
+		
+	}
+
 	private void checkEnemy(){
 		for(Player s: sickos){
 			if(s.getCBox().intersects(p1.getCBox())) {
@@ -191,8 +236,16 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 				System.out.println("killed");
 			}
 		}
+		for(Player m: maniacs){
+			if(m.getCBox().intersects(p1.getCBox())) {
+				//System.exit(0);
+				System.out.println("killed");
+			}
+		}
 		Player toberemoved=null;
+		Player toberemoved3=null;
 		Bullet toberemoved2=null;
+		Bullet toberemoved4=null;
 		for(Player s: sickos){
 			for(Bullet b: shot) {
 				if(s.getCBox().intersects(b.getCBox())){
@@ -200,10 +253,23 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 					toberemoved2=b;
 				
 				}
+				
+			}
+		}
+		for(Player m: maniacs){
+			for(Bullet b: shot) {
+				if(m.getCBox().intersects(b.getCBox())){
+					toberemoved3=m;
+					toberemoved4=b;
+				
+				}
+				
 			}
 		}
 	sickos.remove(toberemoved);
 	shot.remove(toberemoved2);
+	maniacs.remove(toberemoved3);
+	shot.remove(toberemoved4);
 		
 	}
 	
@@ -262,10 +328,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 			shot.add(new Bullet(p1.getX()+15, p1.getY()+45, 5, 5, 2, 3, Color.MAGENTA));
 			charges--;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_Q){
-			maniacs.add(new Player(p1.getX(), p1.getY()+30, 30, 30, false, Color.MAGENTA));
-			charges--;
-		}
+		
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package GameDemo;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.Random;
 
 public class Player{
 	private int x;
@@ -26,6 +27,7 @@ public class Player{
 	private int yLimit = 950;
 
 	boolean canJump = false;
+	Random rand = new Random();
 	
 	public Player(int x, int y, int w, int h, boolean enemy, Color colour){
 		this.x = x;
@@ -47,7 +49,7 @@ public class Player{
 	
 	public void ejump(){
 		if(canJump){
-			yVelocity -= jumpPower*0.89;
+			yVelocity -= jumpPower*0.60;
 			canJump = false;
 		}
 	}

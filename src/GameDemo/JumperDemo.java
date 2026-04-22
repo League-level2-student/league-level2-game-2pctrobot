@@ -251,6 +251,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 				if(s.getCBox().intersects(b.getCBox())){
 					toberemoved=s;
 					toberemoved2=b;
+					System.out.println("shot");
 				
 				}
 				
@@ -261,7 +262,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 				if(m.getCBox().intersects(b.getCBox())){
 					toberemoved3=m;
 					toberemoved4=b;
-				
+					System.out.println("shot");
 				}
 				
 			}

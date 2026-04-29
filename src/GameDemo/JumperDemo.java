@@ -178,7 +178,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		for(Platform p: platforms){
 			if(p1.getCBox().intersects(p.getCBox()) && !stopper){
 				handleCollision(p, p1);
-				System.out.println("collided p1");
+				System.out.println("p1 collided with floor");
 				stopper = true;
 			}
 		}
@@ -190,7 +190,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 			for(Player m: maniacs) {
 				if(s.getCBox().intersects(m.getCBox()) && !stopper){
 					handleCollision(m, s);
-					System.out.println("collided");
+					System.out.println("enemy collided with enemy");
 					stopper = true;
 				}
 				if(!stopper) {
@@ -204,7 +204,7 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 			for(Player s: sickos) {
 				if(m.getCBox().intersects(s.getCBox()) && !stopper){
 					handleCollision(s, m);
-					System.out.println("collided");
+					System.out.println("enemy collided with enemy");
 					stopper = true;
 				}
 				if(!stopper) {
@@ -246,11 +246,49 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		Player toberemoved3=null;
 		Bullet toberemoved2=null;
 		Bullet toberemoved4=null;
-		for(Player s: sickos){
+		ArrayList<Bullet> bDone = new ArrayList<Bullet>();
+		ArrayList<Player> mDone = new ArrayList<Player>();
+		ArrayList<Player> sDone = new ArrayList<Player>();
+		
+		for(Bullet b: shot) {
+			for(Player s:sickos) {
+				if(s.getCBox().intersects(b.getCBox())){
+					sDone.add(s);
+					bDone.add(b);
+					System.out.println("shot");
+				
+				}
+				
+			}
+			for(Player m:maniacs) {
+				if(m.getCBox().intersects(b.getCBox())){
+					mDone.add(m);
+					bDone.add(b);
+					System.out.println("shot");
+				
+				}
+				
+			}
+			
+		}
+		for(Bullet b:bDone) {
+			shot.remove(b);
+		}
+		for(Player m:mDone) {
+			shot.remove(m);
+		}
+		for(Player s:sDone) {
+			shot.remove(s);
+		}
+		
+	}
+		/*for(Player s: sickos){
 			for(Bullet b: shot) {
 				if(s.getCBox().intersects(b.getCBox())){
 					toberemoved=s;
 					toberemoved2=b;
+					sickos.remove(s);
+					shot.remove(b);
 					System.out.println("shot");
 				
 				}
@@ -262,17 +300,17 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 				if(m.getCBox().intersects(b.getCBox())){
 					toberemoved3=m;
 					toberemoved4=b;
+					maniacs.remove(m);
+					shot.remove(b);
 					System.out.println("shot");
 				}
 				
 			}
-		}
-	sickos.remove(toberemoved);
-	shot.remove(toberemoved2);
-	maniacs.remove(toberemoved3);
-	shot.remove(toberemoved4);
+		}*/
+	
+	
+	
 		
-	}
 	
 
 	

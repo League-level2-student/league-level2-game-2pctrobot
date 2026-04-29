@@ -30,6 +30,7 @@ public class Bullet {
 	}
 	
 	public void update() {
+		cBox.setBounds(x, y, width, height);
 		y+=10;
 	}
 	

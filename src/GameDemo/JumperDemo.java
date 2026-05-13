@@ -33,6 +33,10 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	ArrayList<Bullet> shot = new ArrayList<Bullet>();
 	public int charges = 0;
 	public long lastSpawn;
+	final int MENU = 0;
+	final int GAME = 1;
+	final int END = 2;
+	int currentState = MENU;
 	
 	public static void main(String[] args) {
 		new JumperDemo().run();
@@ -83,31 +87,43 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	}
 	
 	public void paintComponent(Graphics g){
-		g.setColor(Color.GRAY);
-		g.fillRect(0, 0, WIDTH, HEIGHT);
-		Font scoreFont = new Font("Arial", Font.PLAIN, 20);
-		g.setFont(scoreFont);
-		g.setColor(Color.WHITE);
-		
-		g.drawString("Charges: "+charges, 180, 30);
-		
-		p1.draw(g);
-		
-		for(Player p : sickos){
-			p.draw(g);
+		if (currentState == MENU) {
+			g.setColor(Color.DARK_GRAY);
+			g.fillRect(0, 0, WIDTH, HEIGHT);
+			Font scoreFont = new Font("Arial", Font.PLAIN, 20);
+			g.setFont(scoreFont);
+			g.setColor(Color.WHITE);
+			g.drawString("Charges: "+charges, 180, 30);
+		} else if (currentState == GAME) {
+			g.setColor(Color.GRAY);
+			g.fillRect(0, 0, WIDTH, HEIGHT);
+			Font scoreFont = new Font("Arial", Font.PLAIN, 20);
+			g.setFont(scoreFont);
+			g.setColor(Color.WHITE);
+			
+			g.drawString("Charges: "+charges, 180, 30);
+			
+			p1.draw(g);
+			
+			for(Player p : sickos){
+				p.draw(g);
+			}
+			
+			for(Player p : maniacs){
+				p.draw(g);
+			}
+			
+			for(Bullet b : shot){
+				b.draw(g);
+			}
+			
+			for(Platform p : platforms){
+				p.draw(g);
+			}
+		} else if (currentState == END) {
+			
 		}
 		
-		for(Player p : maniacs){
-			p.draw(g);
-		}
-		
-		for(Bullet b : shot){
-			b.draw(g);
-		}
-		
-		for(Platform p : platforms){
-			p.draw(g);
-		}
 	}
 	
 	public void actionPerformed(ActionEvent e){
@@ -275,10 +291,10 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 			shot.remove(b);
 		}
 		for(Player m:mDone) {
-			shot.remove(m);
+			maniacs.remove(m);
 		}
 		for(Player s:sDone) {
-			shot.remove(s);
+			sickos.remove(s);
 		}
 		
 	}
@@ -321,6 +337,16 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		}else{
 			u.setYLimit(950);
 		}
+	}
+	
+	public void drawStartState(Graphics g) {
+		
+	}
+	public void drawGameState(Graphics g) {
+		
+	}
+	public void drawEndState(Graphics g) {
+		
 	}
 	
 	@Override

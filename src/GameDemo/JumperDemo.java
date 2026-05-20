@@ -87,43 +87,13 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	}
 	
 	public void paintComponent(Graphics g){
-		if (currentState == MENU) {
-			g.setColor(Color.DARK_GRAY);
-			g.fillRect(0, 0, WIDTH, HEIGHT);
-			Font scoreFont = new Font("Arial", Font.PLAIN, 20);
-			g.setFont(scoreFont);
-			g.setColor(Color.WHITE);
-			g.drawString("Charges: "+charges, 180, 30);
-		} else if (currentState == GAME) {
-			g.setColor(Color.GRAY);
-			g.fillRect(0, 0, WIDTH, HEIGHT);
-			Font scoreFont = new Font("Arial", Font.PLAIN, 20);
-			g.setFont(scoreFont);
-			g.setColor(Color.WHITE);
-			
-			g.drawString("Charges: "+charges, 180, 30);
-			
-			p1.draw(g);
-			
-			for(Player p : sickos){
-				p.draw(g);
+			if (currentState == MENU) {
+				drawStartState(g);
+			} else if (currentState == GAME) {
+				drawGameState(g);
+			} else if (currentState == END) {
+				drawEndState(g);
 			}
-			
-			for(Player p : maniacs){
-				p.draw(g);
-			}
-			
-			for(Bullet b : shot){
-				b.draw(g);
-			}
-			
-			for(Platform p : platforms){
-				p.draw(g);
-			}
-		} else if (currentState == END) {
-			
-		}
-		
 	}
 	
 	public void actionPerformed(ActionEvent e){
@@ -248,13 +218,13 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	private void checkEnemy(){
 		for(Player s: sickos){
 			if(s.getCBox().intersects(p1.getCBox())) {
-				//System.exit(0);
+				currentState = END;
 				System.out.println("killed");
 			}
 		}
 		for(Player m: maniacs){
 			if(m.getCBox().intersects(p1.getCBox())) {
-				//System.exit(0);
+				currentState = END;
 				System.out.println("killed");
 			}
 		}
@@ -340,13 +310,52 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 	}
 	
 	public void drawStartState(Graphics g) {
-		
+		g.setColor(Color.DARK_GRAY);
+		g.fillRect(0, 0, WIDTH, HEIGHT);
+		Font scoreFont = new Font("Arial", Font.PLAIN, 20);
+		g.setFont(scoreFont);
+		g.setColor(Color.RED);
+		g.drawString("Tower o", 405, 38);
+		g.setColor(Color.BLUE);
+		g.drawString("f Cubes", 478, 35);
+		g.setColor(Color.WHITE);
+		g.drawString("WASD to move, Arrow Keys to shoot downrange, Enter to START", 188, 70);
 	}
 	public void drawGameState(Graphics g) {
+		g.setColor(Color.GRAY);
+		g.fillRect(0, 0, WIDTH, HEIGHT);
+		Font scoreFont = new Font("Arial", Font.PLAIN, 20);
+		g.setFont(scoreFont);
+		g.setColor(Color.WHITE);
 		
+		g.drawString("Charges: "+charges, 180, 30);
+		
+		p1.draw(g);
+		
+		for(Player p : sickos){
+			p.draw(g);
+		}
+		
+		for(Player p : maniacs){
+			p.draw(g);
+		}
+		
+		for(Bullet b : shot){
+			b.draw(g);
+		}
+		
+		for(Platform p : platforms){
+			p.draw(g);
+		}
 	}
 	public void drawEndState(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, WIDTH, HEIGHT);
+		Font scoreFont = new Font("Arial", Font.PLAIN, 20);
+		g.setFont(scoreFont);
+		g.setColor(Color.WHITE);
 		
+		g.drawString("Close the tab", 180, 30);
 	}
 	
 	@Override
@@ -375,6 +384,10 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 		if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
 			timer.stop();
 			System.exit(0);
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_ENTER){
+			currentState = GAME;
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_A){
@@ -406,6 +419,8 @@ public class JumperDemo extends JPanel implements ActionListener, KeyListener{
 			p1.right = false;
 		}
 	}
+	
+	
 }
 
 
